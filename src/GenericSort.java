@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GenericSort
 {
@@ -176,7 +177,7 @@ public class GenericSort
 
     ///划分
     public static <T extends Comparable<? super T>> int Partition(T[] array, int p, int r){
-        int q=r ;
+        int q = r ;
         T paviot = array[r];
         for(int  i=r-1; i>=p; i--){
             if (array[i].compareTo(paviot) > 0){
@@ -188,7 +189,63 @@ public class GenericSort
         return q;
     }
 
+    ///快速排序随机版
+    public static <T extends Comparable<? super T>> void RandQuickSort(T[] array, int p, int r){
+        if(p<r){
+            int q = RandPartition(array,p,r);
+            RandQuickSort(array, p, q-1);
+            RandQuickSort(array,q+1,r);
+        }
+    }
 
+    ///随机划分
+    public static <T extends Comparable<? super T>> int RandPartition(T[] array, int p, int r){
+        Random rand = new Random();
+        int i = rand.nextInt(r-p+1) + p;
+        Swap(array,i,r);
+        return Partition(array,p,r);
+    }
+
+    /// <summary>
+    /// 堆排序算法
+    /// </summary>
+    /// <param name="array"></param>
+    public static <T extends Comparable<? super T>> void HeapSort(T[] array){
+        //1.构建大顶堆
+        for(int i = array.length/2-1; i>=0; i--){
+            //从第一个非叶子结点从下至上，从右至左调整结构
+            AdjustMaxHeap(array, i, array.length);
+        }
+        //2.调整堆结构+交换堆顶元素与末尾元素
+        for(int j=array.length-1;j>0;j--){
+            Swap(array,0,j);//将堆顶元素与末尾元素进行交换
+            AdjustMaxHeap(array,0,j);//重新对堆进行调整
+        }
+
+    }
+
+    /**
+     * 调整大顶堆（仅是调整过程，建立在大顶堆已构建的基础上）
+     * @param array
+     * @param i
+     * @param length
+     */
+    public static <T extends Comparable<? super T>> void AdjustMaxHeap(T[]array, int i, int length){
+        T temp = array[i];//先取出当前元素i
+        for(int k=i*2+1; k<length; k=k*2+1){//从i结点的左子结点开始，也就是2i+1处开始
+            if(k+1<length && array[k].compareTo(array[k+1])<0 ){//如果左子结点小于右子结点，k指向右子结点
+                k++;
+            }
+            if( array[k].compareTo(temp)>0 ){//如果子节点大于父节点，将子节点值赋给父节点（不用进行交换）
+                array[i] = array[k];
+                i = k;
+            }else{
+                break;
+            }
+        }
+        //将temp值放到最终的位置
+        array[i] = temp;
+    }
 
     /// <summary>
     /// 元素交换
