@@ -48,28 +48,27 @@ public class GenericSort
         }
     }
 
-    /// <summary>
-    /// 插入排序优化
-    /// </summary>
-    /// <param name="array"></param>
-    public static <T extends Comparable<? super T>> void InsertionSort2(T[] array){
-        int i=0, j=0;
-        int n = array.length;
-        T key ;
-        for (i=1; i<n; i++){
-            key = array[i];
-            for (j=i-1; j>=0; j--){
-                if(key.compareTo(array[j])<0){
-                    array[j+1] = array[j];
-                }else{
-                    break;
+        /// <summary>
+        /// 插入排序优化
+        /// </summary>
+        /// <param name="array"></param>
+        public static <T extends Comparable<? super T>> void InsertionSort2(T[] array){
+            int i=0, j=0;
+            int n = array.length;
+            T key ;
+            for (i=1; i<n; i++){
+                key = array[i];
+                for (j=i-1; j>=0; j--){
+                    if(key.compareTo(array[j])<0){
+                        array[j+1] = array[j];
+                    }else{
+                        break;
+                    }
                 }
+                //找到之后和第i个元素交换
+                array[j+1] = key;
             }
-            //找到之后和第i个元素交换
-            array[j+1] = key;
         }
-
-    }
 
     /// <summary>
     /// 希尔排序
@@ -157,7 +156,26 @@ public class GenericSort
                     j++;
                 }
             }
-            //System.out.println("p="+p+", q="+q+", r="+r+", k="+k+", array[k]="+array[k]);
+        }
+    }
+
+    /**
+     * 冒泡排序
+     *
+     * ①. 比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+     * ②. 对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。这步做完后，最后的元素会是最大的数。
+     * ③. 针对所有的元素重复以上的步骤，除了最后一个。
+     * ④. 持续每次对越来越少的元素重复上面的步骤①~③，直到没有任何一对数字需要比较。
+     * @param array  待排序数组
+     */
+    public static <T extends Comparable<? super T>>  void BubbleSort(T[] array){
+        for (int i = array.length-1; i > 0; i--) {      //外层循环移动游标
+            for(int j = 0; j < i ; j++){    //内层循环遍历游标及之后(或之前)的元素
+                if (array[j].compareTo(array[j+1]) > 0)
+                    if(array[j].compareTo(array[j+1]) > 0){
+                    Swap(array,j,j+1);
+                    }
+            }
         }
     }
 
@@ -258,6 +276,65 @@ public class GenericSort
             array[i] = array[min];
             array[min] = temp;
     }
+
+
+    /**
+     * 基数排序（LSD 从低位开始）
+     *
+     * 基数排序适用于：
+     *  (1)数据范围较小，建议在小于1000
+     *  (2)每个数值都要大于等于0
+     *
+     * ①. 取得数组中的最大数，并取得位数；
+     * ②. arr为原始数组，从最低位开始取每个位组成radix数组；
+     * ③. 对radix进行计数排序（利用计数排序适用于小范围数的特点）；
+     * @param arr	 待排序数组
+     */
+    public static void RadixSort(Integer[] arr){
+        if(arr.length <= 1) return;
+
+        //取得数组中的最大数，并取得位数
+        int max = 0;
+        for(int i = 0; i < arr.length; i++){
+            if(max < arr[i]){
+                max = arr[i];
+            }
+        }
+        int maxDigit = 1;
+        while(max / 10 > 0){
+            maxDigit++;
+            max = max / 10;
+        }
+        //System.out.println("maxDigit: " + maxDigit);
+
+        //申请一个桶空间
+        int[][] buckets = new int[10][arr.length];
+        int base = 10;
+
+        //从低位到高位，对每一位遍历，将所有元素分配到桶中
+        for(int i = 0; i < maxDigit; i++){
+            int[] bktLen = new int[10];        //存储各个桶中存储元素的数量
+
+            //分配：将所有元素分配到桶中
+            for(int j = 0; j < arr.length; j++){
+                int whichBucket = (arr[j] % base) / (base / 10);
+                buckets[whichBucket][bktLen[whichBucket]] = arr[j];
+                bktLen[whichBucket]++;
+            }
+
+            //收集：将不同桶里数据挨个捞出来,为下一轮高位排序做准备,由于靠近桶底的元素排名靠前,因此从桶底先捞
+            int k = 0;
+            for(int b = 0; b < buckets.length; b++){
+                for(int p = 0; p < bktLen[b]; p++){
+                    arr[k++] = buckets[b][p];
+                }
+            }
+
+            //System.out.println("Sorting: " + Arrays.toString(arr));
+            base *= 10;
+        }
+    }
+
 }
 
 
