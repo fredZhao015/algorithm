@@ -224,6 +224,36 @@ public class GenericSort
         return Partition(array,p,r);
     }
 
+    /**
+     * 快速排序2
+     *
+     * @param array
+     * @param low
+     * @param high
+     * @param <T>
+     */
+    public static <T extends Comparable<? super T>> void QuickSort2(T[] array, int low, int high){
+        int i=low;
+        int j=high;
+
+        if (low < high){
+            T key=array[low];
+            while(i<j){ // 此处的while循环结束，则完成了元素key的位置调整
+                while(i<j && array[j].compareTo(key)>=0){
+                    j--;
+                }
+                array[i]=array[j];
+                while(i<j && array[i].compareTo(key)<=0){
+                    i++;
+                }
+                array[j]=array[i];
+                array[i]=key;  //此处不可遗漏
+            }
+            QuickSort2(array,low,i-1);
+            QuickSort2(array,i+1,high);
+        }
+    }
+
     /// <summary>
     /// 堆排序算法
     /// </summary>

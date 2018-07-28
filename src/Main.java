@@ -30,10 +30,10 @@ public class Main {
         /**
          * 通用排序算法测试
          */
-        final int SORTARGNUM = 8;
+        final int SORTARGNUM = 9;
         int i=0, rows=0, delta=500,  maxCourrent=100000;
         String[][]  sortdata = new String[maxCourrent/delta+1][SORTARGNUM+1];
-        sortdata[rows++]= new String[]{"sample","SelectionSort","InsertionSort","ShellSort","MergeSort","QuickSort","HeapSort","RadixSort","Javasort"};
+        sortdata[rows++]= new String[]{"sample","SelectionSort","InsertionSort","ShellSort","MergeSort","QuickSort","QuickSort2","HeapSort","RadixSort","Javasort"};
         for(i=delta;i<=maxCourrent; i+= delta ){
             sortdata[rows++] = executeSort(i);;
         }
@@ -69,7 +69,7 @@ public class Main {
     public static String[] executeSort(int sampleSize){
         int  cnt = 0;
         long startTime = 0, endTime = 0;
-        final int SORTARGNUM = 8;
+        final int SORTARGNUM = 9;
         final int MAXLENGTH = sampleSize;
         String[] costtime = new String[SORTARGNUM+1] ;
         costtime[cnt++] = String.valueOf(sampleSize);
@@ -169,6 +169,20 @@ public class Main {
         logger.info("After  QuickSort:");
         logger.info(Arrays.toString(array6));
         System.out.println("样本数："+sampleSize+"，快速排序算法运行时间： "+ (endTime-startTime) +"ms");
+        System.out.println("****************************************************************************");
+
+        System.out.println("****************************************************************************");
+        Integer[] array9 = new Integer[MAXLENGTH];
+        System.arraycopy(array,0, array9,0,array.length);
+        logger.info("Before QuickSort2:");
+        logger.info(Arrays.toString(array9));
+        startTime = System.currentTimeMillis();
+        sort.QuickSort2(array9,0, array9.length-1);
+        endTime = System.currentTimeMillis();   //获取结束时间
+        costtime[cnt++] = String.valueOf(endTime-startTime);
+        logger.info("After  QuickSort2:");
+        logger.info(Arrays.toString(array9));
+        System.out.println("样本数："+sampleSize+"，快速排序2算法运行时间： "+ (endTime-startTime) +"ms");
         System.out.println("****************************************************************************");
 
         System.out.println("****************************************************************************");
